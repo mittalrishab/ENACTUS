@@ -92,6 +92,18 @@
             font-size: 1.2rem;
         }
 
+        .filter-count {
+            background: var(--primary-yellow);
+            color: var(--primary-black);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
         .filters-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -158,8 +170,14 @@
 
         .view-toggle {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
             margin-bottom: 1rem;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .view-buttons {
+            display: flex;
             gap: 0.5rem;
         }
 
@@ -472,6 +490,16 @@
             .modal-body {
                 grid-template-columns: 1fr;
             }
+
+            .view-toggle {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .filter-count {
+                margin-left: 0;
+            }
         }
 
         /* Export button */
@@ -588,12 +616,17 @@
         </section>
 
         <div class="view-toggle">
-            <button class="view-btn active" id="grid-view-btn">
-                <i class="fas fa-th"></i> Grid View
-            </button>
-            <button class="view-btn" id="list-view-btn">
-                <i class="fas fa-list"></i> List View
-            </button>
+            <div class="view-buttons">
+                <button class="view-btn active" id="grid-view-btn">
+                    <i class="fas fa-th"></i> Grid View
+                </button>
+                <button class="view-btn" id="list-view-btn">
+                    <i class="fas fa-list"></i> List View
+                </button>
+            </div>
+            <div class="filter-count" id="filter-count">
+                <i class="fas fa-filter"></i> Showing <span id="current-count">76</span> of 76 members
+            </div>
         </div>
 
         <main id="members-grid"></main>
@@ -707,7 +740,7 @@
             { "S.NO.": "27", "REGISTRATION NUMBER": "25BEC1073", "FULL NAME": "SAI VIGNESH", "GENDER": "M", "PHONE": "9790722565", "DATE OF BIRTH": null, "YEAR OF STUDY": "1", "EMAIL": "saivignesh.b2025@vitstudent.ac.in", "DEPARTMENT": "Operations", "PROJECT 1": "MINAVAR", "PROJECT 2": "POORANYA", "ACCOMMODATION": "Day Scholar", "PROGRAMME": "B.TECH ECE CORE", "INSTAGRAM": null, "ROLE ": "MEMBER " },
             { "S.NO.": "28", "REGISTRATION NUMBER": "24BLC1211", "FULL NAME": "Visweshwaran K", "GENDER": "M", "PHONE": "8939132364", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "visweshwaran.k2024@vitstudent.ac.in", "DEPARTMENT": "Operations", "PROJECT 1": "MINAVAR", "PROJECT 2": "TARU", "ACCOMMODATION": "Day Scholar", "PROGRAMME": "B.TECH ECM", "INSTAGRAM": null, "ROLE ": "MEMBER " },
             { "S.NO.": "29", "REGISTRATION NUMBER": "24BAI1621", "FULL NAME": "Adithyan S Nair", "GENDER": "M", "PHONE": "8593872534", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "adithyan.snair2024@vitstudent.ac.in", "DEPARTMENT": "Operations", "PROJECT 1": "MINAVAR", "PROJECT 2": "TARU", "ACCOMMODATION": "Day Scholar", "PROGRAMME": "B.TECH CSE AI & ML", "INSTAGRAM": null, "ROLE ": "MEMBER " },
-            { "S.NO.": "30", "REGISTRATION NUMBER": "24BLC1367", "FULL NAME": "Kushagra Kalra", "GENDER": "M", "PHONE": "9457015966", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "kushagra.kalra2024@vitstudent.ac.in", "DEPARTMENT": "Operations", "PROJECT 1": "INARA", "PROJECT 2": "NAARI", "ACCOMMODATION": "Hosteller", "PROGRAMME": "B.TECH ECM", "INSTAGRAM": null, "ROLE ": "MEMBER " },
+            { "S.N.O.": "30", "REGISTRATION NUMBER": "24BLC1367", "FULL NAME": "Kushagra Kalra", "GENDER": "M", "PHONE": "9457015966", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "kushagra.kalra2024@vitstudent.ac.in", "DEPARTMENT": "Operations", "PROJECT 1": "INARA", "PROJECT 2": "NAARI", "ACCOMMODATION": "Hosteller", "PROGRAMME": "B.TECH ECM", "INSTAGRAM": null, "ROLE ": "MEMBER " },
             { "S.NO.": "31", "REGISTRATION NUMBER": "24BRS1197", "FULL NAME": "Swapnal kumar singh", "GENDER": "M", "PHONE": "7099007845", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "swapnal.kumarsingh2025@vitstudent.ac.in", "DEPARTMENT": "Operations", "PROJECT 1": "INARA", "PROJECT 2": "TARU", "ACCOMMODATION": "Hosteller", "PROGRAMME": "B.TECH CSE AI & ROBOTICS", "INSTAGRAM": null, "ROLE ": "MEMBER " },
             { "S.NO.": "32", "REGISTRATION NUMBER": "24BME1112", "FULL NAME": "Keerthivarman M", "GENDER": "M", "PHONE": "7305968528", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "keerthivarman.m2024@vitstudent.ac.in", "DEPARTMENT": "Operations", "PROJECT 1": "NAARI", "PROJECT 2": "POORANYA", "ACCOMMODATION": "Day Scholar", "PROGRAMME": "B.TECH MECHANICAL CORE", "INSTAGRAM": null, "ROLE ": "MEMBER " },
             { "S.NO.": "33", "REGISTRATION NUMBER": "23BMH1156", "FULL NAME": "Himanshu Thadani", "GENDER": "M", "PHONE": "8305666945", "DATE OF BIRTH": null, "YEAR OF STUDY": "3", "EMAIL": "himanshu.thadani2023@vitstudent.ac.in", "DEPARTMENT": "Finance", "PROJECT 1": "ALL", "PROJECT 2": "ALL", "ACCOMMODATION": "Hosteller", "PROGRAMME": "B.TECH MECHATRONICS", "INSTAGRAM": null, "ROLE ": "FINANCE LEAD " },
@@ -730,7 +763,7 @@
             { "S.NO.": "50", "REGISTRATION NUMBER": "24BEC1420", "FULL NAME": "Sukirti", "GENDER": "F", "PHONE": "8004234930", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "sukirti.2024@vitstudent.ac.in", "DEPARTMENT": "Creative", "PROJECT 1": "INARA", "PROJECT 2": "TARU", "ACCOMMODATION": "Hosteller", "PROGRAMME": "B.TECH ECE CORE", "INSTAGRAM": null, "ROLE ": "MEMBER " },
             { "S.NO.": "51", "REGISTRATION NUMBER": "24BEC1171", "FULL NAME": "Adwika", "GENDER": "F", "PHONE": "8303560557", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "adwika.2024@vitstudent.ac.in", "DEPARTMENT": "Creative", "PROJECT 1": "NAARI", "PROJECT 2": "TARU", "ACCOMMODATION": "Hosteller", "PROGRAMME": "B.TECH ECE CORE", "INSTAGRAM": null, "ROLE ": "MEMBER " },
             { "S.NO.": "52", "REGISTRATION NUMBER": "24BCE5095", "FULL NAME": "Mokshdaa Gupta", "GENDER": "F", "PHONE": "8287926240", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "mokshdaa.gupta2024@vitstudent.ac.in", "DEPARTMENT": "Creative", "PROJECT 1": "NAARI", "PROJECT 2": "POORANYA", "ACCOMMODATION": "Hosteller", "PROGRAMME": "B.TECH CSE CORE", "INSTAGRAM": null, "ROLE ": "MEMBER " },
-            { "S.N.O.": "53", "REGISTRATION NUMBER": "24BCE1766", "FULL NAME": "Riya Mhalgi", "GENDER": "F", "PHONE": "9512552394", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "riya.jayeshmhalgi2024@vitstudent.ac.in", "DEPARTMENT": "Creative", "PROJECT 1": "POORANYA", "PROJECT 2": "TARU", "ACCOMMODATION": "Hosteller", "PROGRAMME": "B.TECH CSE CORE", "INSTAGRAM": null, "ROLE ": "MEMBER " },
+            { "S.NO.": "53", "REGISTRATION NUMBER": "24BCE1766", "FULL NAME": "Riya Mhalgi", "GENDER": "F", "PHONE": "9512552394", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "riya.jayeshmhalgi2024@vitstudent.ac.in", "DEPARTMENT": "Creative", "PROJECT 1": "POORANYA", "PROJECT 2": "TARU", "ACCOMMODATION": "Hosteller", "PROGRAMME": "B.TECH CSE CORE", "INSTAGRAM": null, "ROLE ": "MEMBER " },
             { "S.NO.": "54", "REGISTRATION NUMBER": "24BCE5372", "FULL NAME": "Bhavya Shri Vijayakumar", "GENDER": "F", "PHONE": "9789581701", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "bhavya.shri2024@vitstudent.ac.in", "DEPARTMENT": "Creative", "PROJECT 1": "NAARI", "PROJECT 2": "TARU", "ACCOMMODATION": "Day Scholar", "PROGRAMME": "B.TECH CSE CORE", "INSTAGRAM": null, "ROLE ": "MEMBER " },
             { "S.NO.": "55", "REGISTRATION NUMBER": "25BLC1167", "FULL NAME": "Prabhsneh Kaur", "GENDER": "M", "PHONE": "7982889615", "DATE OF BIRTH": null, "YEAR OF STUDY": "1", "EMAIL": "prabhsneh.kaur2025@vitstudent.ac.in", "DEPARTMENT": "Creative", "PROJECT 1": "MINAVAR", "PROJECT 2": "INARA", "ACCOMMODATION": "Hosteller", "PROGRAMME": "B.TECH ECM", "INSTAGRAM": null, "ROLE ": "MEMBER " },
             { "S.NO.": "56", "REGISTRATION NUMBER": "24BME1092", "FULL NAME": "Ruchir", "GENDER": "M", "PHONE": "9916140406", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "ruchirangada.hn2024@vitstudent.ac.in", "DEPARTMENT": "Creative", "PROJECT 1": "MINAVAR", "PROJECT 2": "POORANYA", "ACCOMMODATION": "Hosteller", "PROGRAMME": "B.TECH MECHANICAL CORE", "INSTAGRAM": null, "ROLE ": "MEMBER " },
@@ -773,6 +806,8 @@
             const modal = document.getElementById('member-modal');
             const closeModal = document.getElementById('close-modal');
             const exportBtn = document.getElementById('export-data');
+            const currentCountEl = document.getElementById('current-count');
+            const filterCountEl = document.getElementById('filter-count');
             
             // Stats elements
             const totalMembersEl = document.getElementById('total-members');
@@ -799,6 +834,16 @@
                 year1CountEl.textContent = year1Count;
                 hostellerCountEl.textContent = hostellerCount;
                 dayscholarCountEl.textContent = dayscholarCount;
+            }
+
+            function updateFilterCount(count) {
+                currentCountEl.textContent = count;
+                
+                // Add animation effect when count changes
+                filterCountEl.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    filterCountEl.style.transform = 'scale(1)';
+                }, 200);
             }
 
             function populateFilters() {
@@ -845,6 +890,9 @@
                 } else {
                     displayList(filteredMembers);
                 }
+                
+                // Update the filter count
+                updateFilterCount(filteredMembers.length);
             }
 
             function displayGrid(filteredMembers) {
