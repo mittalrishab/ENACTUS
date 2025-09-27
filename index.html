@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ENACTUS 25-26 | Member Directory</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
@@ -14,6 +15,9 @@
             --secondary-black: #282828;
             --text-grey: #a0a0a0;
             --border-color: #333;
+            --success: #28a745;
+            --danger: #dc3545;
+            --info: #17a2b8;
         }
 
         * {
@@ -46,6 +50,7 @@
             border-bottom: 2px solid var(--primary-yellow);
             margin-bottom: 2rem;
             flex-wrap: wrap;
+            position: relative;
         }
 
         .enactus-logo {
@@ -64,15 +69,39 @@
             color: var(--primary-yellow);
         }
 
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            background: var(--secondary-black);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-number {
+            font-weight: 700;
+            color: var(--primary-yellow);
+            font-size: 1.2rem;
+        }
+
         .filters-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1.5rem;
-            padding: 2rem;
+            padding: 1.5rem;
             background-color: var(--secondary-black);
             border-radius: 12px;
             margin-bottom: 2.5rem;
             border: 1px solid var(--border-color);
+            position: relative;
         }
 
         .filter-group {
@@ -107,7 +136,7 @@
         }
         
         #reset-filters {
-            grid-column: 1 / -1; /* Span full width */
+            grid-column: 1 / -1;
             padding: 0.8rem;
             background: var(--primary-yellow);
             color: var(--primary-black);
@@ -117,15 +146,42 @@
             font-size: 1rem;
             font-weight: 600;
             transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
         
         #reset-filters:hover {
              background-color: #ffda47;
         }
 
+        .view-toggle {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1rem;
+            gap: 0.5rem;
+        }
+
+        .view-btn {
+            background: var(--secondary-black);
+            border: 1px solid var(--border-color);
+            color: var(--text-grey);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .view-btn.active {
+            background: var(--primary-yellow);
+            color: var(--primary-black);
+            border-color: var(--primary-yellow);
+        }
+
         #members-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 2rem;
         }
 
@@ -138,12 +194,30 @@
             flex-direction: column;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
 
         .member-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
             border-color: var(--primary-yellow);
+        }
+
+        .member-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary-yellow);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .member-card:hover::before {
+            transform: scaleX(1);
         }
 
         .card-header {
@@ -178,7 +252,7 @@
 
         .card-body strong {
             color: var(--primary-yellow);
-            min-width: 130px; /* Aligns values */
+            min-width: 130px;
             display: inline-block;
         }
 
@@ -207,6 +281,220 @@
             grid-column: 1 / -1;
             padding: 4rem;
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: var(--secondary-black);
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 700px;
+            position: relative;
+            border: 1px solid var(--primary-yellow);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-grey);
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-white);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .modal-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-yellow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary-black);
+            margin-right: 1.5rem;
+        }
+
+        .modal-info {
+            flex-grow: 1;
+        }
+
+        .modal-info h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-info p {
+            color: var(--text-grey);
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-section h3 {
+            color: var(--primary-yellow);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .info-item {
+            margin-bottom: 0.8rem;
+            display: flex;
+        }
+
+        .info-item strong {
+            min-width: 120px;
+            color: var(--primary-yellow);
+        }
+
+        .contact-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .contact-link {
+            background: var(--primary-black);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--primary-white);
+            transition: background 0.3s;
+        }
+
+        .contact-link:hover {
+            background: var(--primary-yellow);
+            color: var(--primary-black);
+        }
+
+        /* List View */
+        .list-view {
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .member-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--secondary-black);
+            border-radius: 8px;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .member-row:hover {
+            border-color: var(--primary-yellow);
+            transform: translateX(5px);
+        }
+
+        .member-row-header {
+            font-weight: 700;
+            background: var(--primary-black);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .enactus-logo {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .filters-container {
+                grid-template-columns: 1fr;
+            }
+            
+            #members-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .member-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            
+            .member-row-header {
+                display: none;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+            
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Export button */
+        .export-btn {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: var(--primary-yellow);
+            color: var(--primary-black);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.3s;
+        }
+
+        .export-btn:hover {
+            background: #ffda47;
+        }
     </style>
 </head>
 <body>
@@ -215,60 +503,177 @@
         <header class="header">
             <img src="https://seeklogo.com/images/E/enactus-logo-5067605AE8-seeklogo.com.png" alt="Enactus Logo" class="enactus-logo">
             <h1>ENACTUS <span>25-26</span> <br>Member Directory</h1>
+            <button class="export-btn" id="export-data">
+                <i class="fas fa-download"></i> Export Data
+            </button>
         </header>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <i class="fas fa-users"></i>
+                <span>Total Members: <span class="stat-number" id="total-members">0</span></span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-user-graduate"></i>
+                <span>Year 3: <span class="stat-number" id="year3-count">0</span></span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-user-graduate"></i>
+                <span>Year 2: <span class="stat-number" id="year2-count">0</span></span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-user-graduate"></i>
+                <span>Year 1: <span class="stat-number" id="year1-count">0</span></span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-home"></i>
+                <span>Hostellers: <span class="stat-number" id="hosteller-count">0</span></span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-building"></i>
+                <span>Day Scholars: <span class="stat-number" id="dayscholar-count">0</span></span>
+            </div>
+        </div>
 
         <section class="filters-container">
             <div class="filter-group">
-                <label for="search-bar">Search by Name / Reg No.</label>
+                <label for="search-bar"><i class="fas fa-search"></i> Search by Name / Reg No.</label>
                 <input type="text" id="search-bar" placeholder="e.g., Jia Shah or 23BCE1880">
             </div>
             <div class="filter-group">
-                <label for="gender-filter">Gender</label>
+                <label for="gender-filter"><i class="fas fa-venus-mars"></i> Gender</label>
                 <select id="gender-filter">
                     <option value="">All</option>
                 </select>
             </div>
             <div class="filter-group">
-                <label for="year-filter">Year of Study</label>
+                <label for="year-filter"><i class="fas fa-calendar-alt"></i> Year of Study</label>
                 <select id="year-filter">
                     <option value="">All</option>
                 </select>
             </div>
             <div class="filter-group">
-                <label for="dept-filter">Department</label>
+                <label for="dept-filter"><i class="fas fa-building"></i> Department</label>
                 <select id="dept-filter">
                     <option value="">All</option>
                 </select>
             </div>
             <div class="filter-group">
-                <label for="project-filter">Project</label>
+                <label for="project-filter"><i class="fas fa-project-diagram"></i> Project</label>
                 <select id="project-filter">
                     <option value="">All</option>
                 </select>
             </div>
             <div class="filter-group">
-                <label for="accommodation-filter">Accommodation</label>
+                <label for="accommodation-filter"><i class="fas fa-bed"></i> Accommodation</label>
                 <select id="accommodation-filter">
                     <option value="">All</option>
                 </select>
             </div>
             <div class="filter-group">
-                <label for="programme-filter">Programme</label>
+                <label for="programme-filter"><i class="fas fa-graduation-cap"></i> Programme</label>
                 <select id="programme-filter">
                     <option value="">All</option>
                 </select>
             </div>
             <div class="filter-group">
-                <label for="role-filter">Role</label>
+                <label for="role-filter"><i class="fas fa-user-tag"></i> Role</label>
                 <select id="role-filter">
                     <option value="">All</option>
                 </select>
             </div>
-            <button id="reset-filters">Reset All Filters</button>
+            <button id="reset-filters">
+                <i class="fas fa-redo"></i> Reset All Filters
+            </button>
         </section>
 
-        <main id="members-grid">
-            </main>
+        <div class="view-toggle">
+            <button class="view-btn active" id="grid-view-btn">
+                <i class="fas fa-th"></i> Grid View
+            </button>
+            <button class="view-btn" id="list-view-btn">
+                <i class="fas fa-list"></i> List View
+            </button>
+        </div>
+
+        <main id="members-grid"></main>
+        <div class="list-view" id="members-list"></div>
+    </div>
+
+    <!-- Modal for detailed view -->
+    <div class="modal" id="member-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <div class="modal-header">
+                <div class="modal-avatar" id="modal-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="modal-info">
+                    <h2 id="modal-name">Member Name</h2>
+                    <p id="modal-reg">Registration Number</p>
+                    <span class="role-badge" id="modal-role">Role</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="info-section">
+                    <h3>Personal Information</h3>
+                    <div class="info-item">
+                        <strong>Gender:</strong>
+                        <span id="modal-gender">-</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Date of Birth:</strong>
+                        <span id="modal-dob">-</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Year of Study:</strong>
+                        <span id="modal-year">-</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Accommodation:</strong>
+                        <span id="modal-accommodation">-</span>
+                    </div>
+                </div>
+                <div class="info-section">
+                    <h3>Academic Information</h3>
+                    <div class="info-item">
+                        <strong>Programme:</strong>
+                        <span id="modal-programme">-</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Department:</strong>
+                        <span id="modal-department">-</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Project 1:</strong>
+                        <span id="modal-project1">-</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Project 2:</strong>
+                        <span id="modal-project2">-</span>
+                    </div>
+                </div>
+                <div class="info-section">
+                    <h3>Contact Information</h3>
+                    <div class="info-item">
+                        <strong>Phone:</strong>
+                        <span id="modal-phone">-</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Email:</strong>
+                        <span id="modal-email">-</span>
+                    </div>
+                    <div class="contact-links">
+                        <a href="#" class="contact-link" id="modal-call">
+                            <i class="fas fa-phone"></i> Call
+                        </a>
+                        <a href="#" class="contact-link" id="modal-email-link">
+                            <i class="fas fa-envelope"></i> Email
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -325,7 +730,7 @@
             { "S.NO.": "50", "REGISTRATION NUMBER": "24BEC1420", "FULL NAME": "Sukirti", "GENDER": "F", "PHONE": "8004234930", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "sukirti.2024@vitstudent.ac.in", "DEPARTMENT": "Creative", "PROJECT 1": "INARA", "PROJECT 2": "TARU", "ACCOMMODATION": "Hosteller", "PROGRAMME": "B.TECH ECE CORE", "INSTAGRAM": null, "ROLE ": "MEMBER " },
             { "S.NO.": "51", "REGISTRATION NUMBER": "24BEC1171", "FULL NAME": "Adwika", "GENDER": "F", "PHONE": "8303560557", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "adwika.2024@vitstudent.ac.in", "DEPARTMENT": "Creative", "PROJECT 1": "NAARI", "PROJECT 2": "TARU", "ACCOMMODATION": "Hosteller", "PROGRAMME": "B.TECH ECE CORE", "INSTAGRAM": null, "ROLE ": "MEMBER " },
             { "S.NO.": "52", "REGISTRATION NUMBER": "24BCE5095", "FULL NAME": "Mokshdaa Gupta", "GENDER": "F", "PHONE": "8287926240", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "mokshdaa.gupta2024@vitstudent.ac.in", "DEPARTMENT": "Creative", "PROJECT 1": "NAARI", "PROJECT 2": "POORANYA", "ACCOMMODATION": "Hosteller", "PROGRAMME": "B.TECH CSE CORE", "INSTAGRAM": null, "ROLE ": "MEMBER " },
-            { "S.NO.": "53", "REGISTRATION NUMBER": "24BCE1766", "FULL NAME": "Riya Mhalgi", "GENDER": "F", "PHONE": "9512552394", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "riya.jayeshmhalgi2024@vitstudent.ac.in", "DEPARTMENT": "Creative", "PROJECT 1": "POORANYA", "PROJECT 2": "TARU", "ACCOMMODATION": "Hosteller", "PROGRAMME": "B.TECH CSE CORE", "INSTAGRAM": null, "ROLE ": "MEMBER " },
+            { "S.N.O.": "53", "REGISTRATION NUMBER": "24BCE1766", "FULL NAME": "Riya Mhalgi", "GENDER": "F", "PHONE": "9512552394", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "riya.jayeshmhalgi2024@vitstudent.ac.in", "DEPARTMENT": "Creative", "PROJECT 1": "POORANYA", "PROJECT 2": "TARU", "ACCOMMODATION": "Hosteller", "PROGRAMME": "B.TECH CSE CORE", "INSTAGRAM": null, "ROLE ": "MEMBER " },
             { "S.NO.": "54", "REGISTRATION NUMBER": "24BCE5372", "FULL NAME": "Bhavya Shri Vijayakumar", "GENDER": "F", "PHONE": "9789581701", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "bhavya.shri2024@vitstudent.ac.in", "DEPARTMENT": "Creative", "PROJECT 1": "NAARI", "PROJECT 2": "TARU", "ACCOMMODATION": "Day Scholar", "PROGRAMME": "B.TECH CSE CORE", "INSTAGRAM": null, "ROLE ": "MEMBER " },
             { "S.NO.": "55", "REGISTRATION NUMBER": "25BLC1167", "FULL NAME": "Prabhsneh Kaur", "GENDER": "M", "PHONE": "7982889615", "DATE OF BIRTH": null, "YEAR OF STUDY": "1", "EMAIL": "prabhsneh.kaur2025@vitstudent.ac.in", "DEPARTMENT": "Creative", "PROJECT 1": "MINAVAR", "PROJECT 2": "INARA", "ACCOMMODATION": "Hosteller", "PROGRAMME": "B.TECH ECM", "INSTAGRAM": null, "ROLE ": "MEMBER " },
             { "S.NO.": "56", "REGISTRATION NUMBER": "24BME1092", "FULL NAME": "Ruchir", "GENDER": "M", "PHONE": "9916140406", "DATE OF BIRTH": null, "YEAR OF STUDY": "2", "EMAIL": "ruchirangada.hn2024@vitstudent.ac.in", "DEPARTMENT": "Creative", "PROJECT 1": "MINAVAR", "PROJECT 2": "POORANYA", "ACCOMMODATION": "Hosteller", "PROGRAMME": "B.TECH MECHANICAL CORE", "INSTAGRAM": null, "ROLE ": "MEMBER " },
@@ -353,6 +758,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const membersGrid = document.getElementById('members-grid');
+            const membersList = document.getElementById('members-list');
             const searchBar = document.getElementById('search-bar');
             const genderFilter = document.getElementById('gender-filter');
             const yearFilter = document.getElementById('year-filter');
@@ -362,6 +768,38 @@
             const programmeFilter = document.getElementById('programme-filter');
             const roleFilter = document.getElementById('role-filter');
             const resetBtn = document.getElementById('reset-filters');
+            const gridViewBtn = document.getElementById('grid-view-btn');
+            const listViewBtn = document.getElementById('list-view-btn');
+            const modal = document.getElementById('member-modal');
+            const closeModal = document.getElementById('close-modal');
+            const exportBtn = document.getElementById('export-data');
+            
+            // Stats elements
+            const totalMembersEl = document.getElementById('total-members');
+            const year3CountEl = document.getElementById('year3-count');
+            const year2CountEl = document.getElementById('year2-count');
+            const year1CountEl = document.getElementById('year1-count');
+            const hostellerCountEl = document.getElementById('hosteller-count');
+            const dayscholarCountEl = document.getElementById('dayscholar-count');
+
+            let currentView = 'grid'; // Default view
+            let filteredMembers = [...membersData];
+
+            function updateStats() {
+                totalMembersEl.textContent = membersData.length;
+                
+                const year3Count = membersData.filter(m => m['YEAR OF STUDY'] === '3').length;
+                const year2Count = membersData.filter(m => m['YEAR OF STUDY'] === '2').length;
+                const year1Count = membersData.filter(m => m['YEAR OF STUDY'] === '1').length;
+                const hostellerCount = membersData.filter(m => m['ACCOMMODATION'] === 'Hosteller').length;
+                const dayscholarCount = membersData.filter(m => m['ACCOMMODATION'] === 'Day Scholar').length;
+                
+                year3CountEl.textContent = year3Count;
+                year2CountEl.textContent = year2Count;
+                year1CountEl.textContent = year1Count;
+                hostellerCountEl.textContent = hostellerCount;
+                dayscholarCountEl.textContent = dayscholarCount;
+            }
 
             function populateFilters() {
                 const genders = new Set();
@@ -402,11 +840,23 @@
             }
             
             function displayMembers(filteredMembers) {
+                if (currentView === 'grid') {
+                    displayGrid(filteredMembers);
+                } else {
+                    displayList(filteredMembers);
+                }
+            }
+
+            function displayGrid(filteredMembers) {
                 membersGrid.innerHTML = '';
+                membersList.style.display = 'none';
+                membersGrid.style.display = 'grid';
+                
                 if (filteredMembers.length === 0) {
                     membersGrid.innerHTML = '<p class="no-results">😢 No members found with the selected criteria.</p>';
                     return;
                 }
+                
                 filteredMembers.forEach(member => {
                     const card = document.createElement('div');
                     card.className = 'member-card';
@@ -427,8 +877,80 @@
                             <span class="role-badge">${member['ROLE '].trim()}</span>
                         </div>
                     `;
+                    
+                    card.addEventListener('click', () => openModal(member));
                     membersGrid.appendChild(card);
                 });
+            }
+
+            function displayList(filteredMembers) {
+                membersList.innerHTML = '';
+                membersGrid.style.display = 'none';
+                membersList.style.display = 'flex';
+                
+                if (filteredMembers.length === 0) {
+                    membersList.innerHTML = '<p class="no-results">😢 No members found with the selected criteria.</p>';
+                    return;
+                }
+                
+                // Create header row
+                const headerRow = document.createElement('div');
+                headerRow.className = 'member-row member-row-header';
+                headerRow.innerHTML = `
+                    <div>Name</div>
+                    <div>Reg No.</div>
+                    <div>Programme</div>
+                    <div>Year</div>
+                    <div>Role</div>
+                `;
+                membersList.appendChild(headerRow);
+                
+                // Create data rows
+                filteredMembers.forEach(member => {
+                    const row = document.createElement('div');
+                    row.className = 'member-row';
+                    row.innerHTML = `
+                        <div>${member['FULL NAME']}</div>
+                        <div>${member['REGISTRATION NUMBER']}</div>
+                        <div>${member['PROGRAMME']}</div>
+                        <div>${member['YEAR OF STUDY']}</div>
+                        <div>${member['ROLE '].trim()}</div>
+                    `;
+                    
+                    row.addEventListener('click', () => openModal(member));
+                    membersList.appendChild(row);
+                });
+            }
+
+            function openModal(member) {
+                document.getElementById('modal-name').textContent = member['FULL NAME'];
+                document.getElementById('modal-reg').textContent = member['REGISTRATION NUMBER'];
+                document.getElementById('modal-role').textContent = member['ROLE '].trim();
+                document.getElementById('modal-gender').textContent = member['GENDER'] === 'M' ? 'Male' : 'Female';
+                document.getElementById('modal-dob').textContent = member['DATE OF BIRTH'] || 'Not provided';
+                document.getElementById('modal-year').textContent = member['YEAR OF STUDY'];
+                document.getElementById('modal-accommodation').textContent = member['ACCOMMODATION'];
+                document.getElementById('modal-programme').textContent = member['PROGRAMME'];
+                document.getElementById('modal-department').textContent = member['DEPARTMENT'];
+                document.getElementById('modal-project1').textContent = member['PROJECT 1'];
+                document.getElementById('modal-project2').textContent = member['PROJECT 2'];
+                document.getElementById('modal-phone').textContent = member['PHONE'];
+                document.getElementById('modal-email').textContent = member['EMAIL'];
+                
+                // Set up contact links
+                document.getElementById('modal-call').href = `tel:${member['PHONE']}`;
+                document.getElementById('modal-email-link').href = `mailto:${member['EMAIL']}`;
+                
+                // Set avatar initial
+                const avatar = document.getElementById('modal-avatar');
+                const initials = member['FULL NAME'].split(' ').map(n => n[0]).join('').toUpperCase();
+                avatar.innerHTML = initials;
+                
+                modal.style.display = 'block';
+            }
+
+            function closeModalHandler() {
+                modal.style.display = 'none';
             }
 
             function filterAndDisplay() {
@@ -441,7 +963,7 @@
                 const selectedProgramme = programmeFilter.value;
                 const selectedRole = roleFilter.value;
 
-                const filtered = membersData.filter(member => {
+                filteredMembers = membersData.filter(member => {
                     const nameMatch = member['FULL NAME'].toLowerCase().includes(searchTerm);
                     const regMatch = member['REGISTRATION NUMBER'].toLowerCase().includes(searchTerm);
                     const genderMatch = !selectedGender || member['GENDER'] === selectedGender;
@@ -455,7 +977,7 @@
                     return (nameMatch || regMatch) && genderMatch && yearMatch && deptMatch && projectMatch && accommodationMatch && programmeMatch && roleMatch;
                 });
 
-                displayMembers(filtered);
+                displayMembers(filteredMembers);
             }
 
             function resetAllFilters() {
@@ -470,13 +992,64 @@
                 filterAndDisplay();
             }
 
+            function switchView(view) {
+                currentView = view;
+                
+                if (view === 'grid') {
+                    gridViewBtn.classList.add('active');
+                    listViewBtn.classList.remove('active');
+                } else {
+                    listViewBtn.classList.add('active');
+                    gridViewBtn.classList.remove('active');
+                }
+                
+                displayMembers(filteredMembers);
+            }
+
+            function exportData() {
+                // Convert filtered members to CSV
+                const headers = Object.keys(membersData[0]);
+                const csvContent = [
+                    headers.join(','),
+                    ...filteredMembers.map(row => headers.map(header => {
+                        const value = row[header] || '';
+                        // Escape quotes and wrap in quotes if contains comma
+                        return `"${String(value).replace(/"/g, '""')}"`;
+                    }).join(','))
+                ].join('\n');
+                
+                // Create download link
+                const blob = new Blob([csvContent], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'enactus_members.csv';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            // Event listeners
             [searchBar, genderFilter, yearFilter, deptFilter, projectFilter, accommodationFilter, programmeFilter, roleFilter].forEach(el => {
                 el.addEventListener('input', filterAndDisplay);
             });
             
             resetBtn.addEventListener('click', resetAllFilters);
+            gridViewBtn.addEventListener('click', () => switchView('grid'));
+            listViewBtn.addEventListener('click', () => switchView('list'));
+            closeModal.addEventListener('click', closeModalHandler);
+            exportBtn.addEventListener('click', exportData);
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModalHandler();
+                }
+            });
 
             // Initial setup
+            updateStats();
             populateFilters();
             displayMembers(membersData);
         });
